@@ -1,8 +1,6 @@
 ﻿using DepartmentsEmployees.Models;
 using Microsoft.Data.SqlClient;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace DepartmentsEmployees.Data
 {
@@ -98,7 +96,81 @@ namespace DepartmentsEmployees.Data
                 }
             }
         }
+        public List<Employee> GetAllEmployeesWithDepartment()
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    // Here is the sql command that we want to be run when the driver gets to the database
+                    cmd.CommandText = @"
+                        SELECT e.Id, e.FirstName, e.LastName, e.DepartmentId, d.Id, d.DeptName as 'Department Name'
+                        FROM Employee e
+                        LEFT JOIN Department d
+                        ON e.DepartmentId = d.Id";
 
+                    // ExecuteReader actually has the driver go to the database and executes that command. The driver then comes back with a bunch of data from the database. This is held in the this variable called "reader"
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    // This is just us initializing the list that we'll eventually return
+                    List<Employee> allEmployeesWithDepartment = new List<Employee>();
+
+
+                    // The reader will read the returned data from the
+                    while (reader.Read())
+                    {
+                        // Get ordinal returns us what "position" the Id column is in
+                        int idColumn = reader.GetOrdinal("Id");
+                        int idValue = reader.GetInt32(idColumn);
+
+                        // The reader isn't smart enough to know automatically what TYPE of data it's reading.
+                        // For that reason we have to tell it, by saying `GetInt32`, `GetString`, GetDate`, etc
+                        int firstNameColumn = reader.GetOrdinal("FirstName");
+                        string firstNameValue = reader.GetString(firstNameColumn);
+
+                        int lastNameColumn = reader.GetOrdinal("LastName");
+                        string lastNameValue = reader.GetString(lastNameColumn);
+
+                        int departmentIdColumn = reader.GetOrdinal("DepartmentId");
+                        int departmentValue = reader.GetInt32(departmentIdColumn);
+
+                        int departmentNameColumn = reader.GetOrdinal("DeptName");
+                        string departmentNameValue = reader.GetString(departmentNameColumn);
+
+                        // Now that all the data is parsed, we create a new C# object
+                        var employee = new Employee()
+                        {
+                            Id = idValue,
+                            FirstName = firstNameValue,
+                            LastName = lastNameValue,
+                            DepartmentId = departmentValue,
+                            Department = new Department()
+                            {
+                                Id = departmentValue,
+                                DeptName = departmentNameValue
+                            }
+                        };
+
+                        // Now that we have a parsed C# object, we can add it to the list and continue with the while loop
+                        allEmployeesWithDepartment.Add(employee);
+                    }
+
+                    // Now we can close the connection
+                    reader.Close();
+
+                    // and return all employees
+                    return allEmployeesWithDepartment;
+                }
+            }
+        
+
+
+
+    
+
+
+                }
         public Employee GetEmployeeById(int employeeId)
         {
             // This opens the connection. SQLConnection is the TUNNEL
