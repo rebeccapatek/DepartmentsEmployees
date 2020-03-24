@@ -1,0 +1,4 @@
+C:\Users\rebec\source\repos\EMPDEP AGAIN\EMPDEP AGAIN\bin\Debug\netcoreapp3.1\EMPDEP AGAIN.exe
+C:\Users\rebec\source\repos\EMPDEP AGAIN\EMPDEP AGAIN\obj\Debug\netcoreapp3.1\EMPDEP AGAIN.csprojAssemblyReference.cache
+C:\Users\rebec\source\repos\EMPDEP AGAIN\EMPDEP AGAIN\obj\Debug\netcoreapp3.1\EMPDEP AGAIN.AssemblyInfoInputs.cache
+C:\Users\rebec\source\repos\EMPDEP AGAIN\EMPDEP AGAIN\obj\Debug\netcoreapp3.1\EMPDEP AGAIN.AssemblyInfo.cs
